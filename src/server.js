@@ -12,8 +12,11 @@ const MONGODB_URI = process.env.MONGODB_URI || "";
 const app = express();
 const server = new Server(app);
 
-// Add public dir to host local file
+// Add public dir to host html and create its route
 app.use(express.static("public"));
+app.get("/", (req, res) => {
+    res.sendFile(`${__dirname}/index.html`)
+});
 
 // Run server
 server.listen(
