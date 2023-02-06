@@ -2,11 +2,23 @@ import express from "express";
 import { Server } from "http";
 import { config } from "dotenv";
 import { Server as SocketIOServer } from "socket.io";
+import { router as userRouter } from "./routes/api/v1/user.js";
+import { router as messagesRouter } from "./routes/api/v1/[room]/messages.js";
+import { connect } from "mongoose";
+import { createMessage } from "./services/message.service.js";
 
 // Load configuration from .env file
 config();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || "";
+
+// Connect to our database
+connect(
+    MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
+);
 
 // Init our express server and socketio server
 const app = express();
@@ -19,6 +31,10 @@ app.get("/", (req, res) => {
     res.sendFile(`${__dirname}/index.html`)
 });
 
+// Add in our routes
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1", messagesRouter);
+
 // Run server
 server.listen(
     PORT,
@@ -28,7 +44,7 @@ server.listen(
 const rooms = {};
 
 // Now prep our socket connection
-io.on("connection", (socke) => {
+io.on("connection", (socket) => {
     socket.on("user_join", (user, room) => {
         console.log(`${user.username} has joined ${room}`);
 
@@ -47,7 +63,8 @@ io.on("connection", (socke) => {
         socket.to(room).emit("server_broadcast_user_join", user);
     });
 
-    socket.on("user_sends_message", (message) => {
+    socket.on("user_sends_message", async (author_username, room, content) => {
+        const message = await createMessage(author_username, room, content);
         socket.to(message.room).emit(message);
     });
 
