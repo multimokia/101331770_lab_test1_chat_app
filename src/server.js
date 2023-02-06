@@ -6,6 +6,12 @@ import { router as userRouter } from "./routes/api/v1/user.js";
 import { router as messagesRouter } from "./routes/api/v1/[room]/messages.js";
 import { connect } from "mongoose";
 import { createMessage } from "./services/message.service.js";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Fix globals here
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load configuration from .env file
 config();
@@ -23,12 +29,18 @@ connect(
 // Init our express server and socketio server
 const app = express();
 const server = new Server(app);
-const io = SocketIOServer(server);
+const io = new SocketIOServer(server);
+
+// Add json parsing to our express server
+app.use(express.json());
 
 // Add public dir to host html and create its route
-app.use(express.static("public"));
+app.use("/static", express.static(`${__dirname}/public`));
 app.get("/", (req, res) => {
-    res.sendFile(`${__dirname}/index.html`)
+    res.sendFile(`${__dirname}/pages/index.html`);
+});
+app.get("/chat", (req, res) => {
+    res.sendFile(`${__dirname}/pages/chat.html`);
 });
 
 // Add in our routes

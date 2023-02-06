@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getMessagesInRoom } from "../../../../services/message.service.js";
 
 const router = Router();
 

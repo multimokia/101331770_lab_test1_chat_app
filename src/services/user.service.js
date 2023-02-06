@@ -16,13 +16,19 @@ export async function registerUser(username, password, firstname, lastname) {
 }
 
 export async function loginUser(username, password) {
-    const user = await Users.findOne({ username });
+    const user = await Users.findOne({ username }).select("-__v");
 
     // If the user doesn't exist, return false (no acct/invalid details)
     if (!user) {
-        return false;
+        return null;
     }
 
     // Compare the password with the hashed password
-    return await bcrypt.compare(password, user.password);
+    const isValidCredentials = await bcrypt.compare(password, user.password);
+
+    if (isValidCredentials) {
+        return user;
+    }
+
+    return null;
 }
