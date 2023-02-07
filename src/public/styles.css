@@ -1,34 +1,213 @@
-body {
-    padding: 0;
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+:root {
+    --foreground-primary: #7f849c;
+    --foreground-secondary: #45475a;
+    --foreground-tertiary: #313244;
+    --text-primary: #cdd6f4;
+    --background-primary: #1e1e2e;
+    --background-secondary: #313244;
+    --success-color: #a6e3a1;
+    --error-color: #f38ba8;
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    background: var(--background-primary);
+    height: 100vh;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.btn {
+    cursor: pointer;
+    padding: 5px 15px;
+    background: var(--background-primary);
+    color: var(--text-primary);
+    border: 0;
+    font-size: 17px;
+}
+
+/* Chat Page */
+
+.chat-container {
+    background: var(--background-primary);
+    overflow: hidden;
+}
+
+.chat-header {
+    background: var(--background-secondary);
+    color: var(--foreground-primary);
+    padding: 0 30px;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chat-main {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    height: 80vh;
+}
+
+.chat-sidebar {
+    background: var(--foreground-secondary);
+    color: var(--text-primary);
+    max-width: 15vw;
+    padding: 20px 20px 60px;
+    overflow-y: scroll;
+}
+
+.chat-sidebar h2 {
+    font-size: 20px;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.chat-sidebar h3 {
+    margin-bottom: 15px;
+}
+
+.chat-sidebar ul li {
+    padding: 10px 0;
+}
+
+.chat-messages {
+    padding: 30px;
+    width: 85vw;
+    overflow-y: scroll;
+    overflow-anchor: none;
+    background-color: var(--background-primary);
+}
+
+.chat-messages .message {
+    padding: 10px;
+    margin-bottom: 15px;
+    background: var(--foreground-tertiary);
+    border-radius: 5px;
+    overflow-wrap: break-word;
+}
+
+.chat-messages .message .meta {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--text-primary);
+    opacity: 0.7;
+    margin-bottom: 7px;
+}
+
+.chat-messages .message .meta span {
+    color: var(--foreground-primary);
+}
+
+.chat-form-container {
+    height: 10vh;
+    padding: 0 30px;
+    background-color: var(--foreground-primary);
+    display: flex;
+    align-items: center;
+}
+
+.chat-form-container form {
     display: flex;
     justify-content: center;
+    flex-grow: 0.8;
+    margin-left: auto;
 }
 
-#message-container {
-    width: 80%;
-    max-width: 1200px;
-}
-
-#message-container div {
-    background-color: #CCC;
+.chat-form-container input[type='text'] {
+    font-size: 16px;
     padding: 5px;
+    height: 60%;
+    flex-grow: 0.95;
+    flex: 1;
 }
 
-#message-container div:nth-child(2n) {
-    background-color: #FFF;
+.chat-form-container button {
+    flex-grow: 0.05;
 }
 
-#send-container {
-    position: fixed;
-    padding-bottom: 30px;
-    bottom: 0;
-    background-color: white;
-    max-width: 1200px;
-    width: 80%;
-    display: flex;
+.inline-url, .inline-url:visited {
+    color: var(--foreground-primary);
 }
 
-#message-input {
-    flex-grow: 1;
+/* Join Page */
+.join-container {
+    max-width: 500px;
+    margin: 80px auto;
+    color: var(--background-primary);;
+}
+
+.join-header {
+    text-align: center;
+    padding: 20px;
+    background: var(--foreground-primary);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.join-main {
+    padding: 30px 40px;
+    background: var(--foreground-secondary);
+}
+
+.join-main p {
+    margin-bottom: 20px;
+}
+
+.join-main .form-control {
+    margin-bottom: 20px;
+}
+
+.join-main label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.join-main input {
+    font-size: 16px;
+    padding: 5px;
+    height: 40px;
+    width: 100%;
+}
+
+.join-main select {
+    font-size: 16px;
+    padding: 5px;
+    height: 40px;
+    width: 100%;
+}
+
+.join-main .btn {
+    margin-top: 20px;
+    width: 100%;
+}
+
+@media (max-width: 700px) {
+    .chat-main {
+        display: block;
+    }
+
+    .chat-sidebar {
+        display: none;
+    }
+}
+
+.text {
+    color: var(--text-primary);
 }

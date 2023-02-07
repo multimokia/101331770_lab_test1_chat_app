@@ -2,9 +2,9 @@ import { MessagesModel as Messages } from "../schemas/message.js";
 
 export const createMessage = async (username, room, content) => {
     const message = new Messages({
-        room,
-        content,
-        from_user: username,
+        room: room,
+        content: content,
+        author: username,
         sent_time: new Date()
     });
 
@@ -16,5 +16,5 @@ export const getMessagesInRoom = async (room) => {
     return await Messages
         .find({ room })
         .limit(100)
-        .sort({ sent_time: -1 });
+        .sort({ sent_time: 1 });
 }

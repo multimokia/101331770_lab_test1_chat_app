@@ -36,11 +36,17 @@ app.use(express.json());
 
 // Add public dir to host html and create its route
 app.use("/static", express.static(`${__dirname}/public`));
+
 app.get("/", (req, res) => {
     res.sendFile(`${__dirname}/pages/index.html`);
 });
+
 app.get("/chat", (req, res) => {
     res.sendFile(`${__dirname}/pages/chat.html`);
+});
+
+app.get("/register", (req, res) => {
+    res.sendFile(`${__dirname}/pages/register.html`);
 });
 
 // Add in our routes
@@ -62,29 +68,39 @@ io.on("connection", (socket) => {
 
         // If room isn't stored, we add it
         if (rooms[room] === undefined) {
-            rooms[room] = { users: {} }
+            rooms[room] = { }
         }
 
         // And add the user to the room by id
-        rooms[room].users[user.id] = user;
+        rooms[room][user._id] = user.username;
 
         // Finally, officially do this on socket.io
         socket.join(room);
 
+        // Send the list of users in this channel
+        io.to(room).emit("server_broadcast_room_users", rooms[room]);
+
         // And broadcast that the user has joined
-        socket.to(room).emit("server_broadcast_user_join", user);
+        io.to(room).emit("server_broadcast_user_join", user.username);
     });
 
     socket.on("user_sends_message", async (author_username, room, content) => {
         const message = await createMessage(author_username, room, content);
-        socket.to(message.room).emit(message);
+        console.log(`[${message.room}]: ${message.author} sent a message: ${message.content} - ${message.sent_time}`);
+        io.to(message.room).emit("server_broadcast_user_message", message);
     });
 
     socket.on("user_leave", (user, room) => {
         console.log(`${user.username} has left ${room}`);
 
         // Remove user from room
-        delete rooms[room].users[user.id];
-        socket.leave(room)
+        delete rooms[room][user._id];
+        socket.leave(room);
+
+        // And broadcast that the user has left
+        io.to(room).emit("server_broadcast_user_leave", user.username);
+
+        // Send an updated list of users
+        io.to(room).emit("server_broadcast_room_users", rooms[room]);
     });
 });

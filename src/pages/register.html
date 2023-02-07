@@ -13,23 +13,17 @@
         <link rel="stylesheet" href="/static/styles.css" />
         <title>ChaaaaaaAAAAAAAAAAAAAAt</title>
         <script>
-            function login(e) {
+            function register(e) {
                 e.preventDefault();
                 const username = document.getElementById("username").value;
                 const password = document.getElementById("password").value;
-                const server = document.querySelector("select").value;
+                const firstname = document.getElementById("firstname").value;
+                const lastname = document.getElementById("lastname").value;
 
-                // If no server selected, alert error
-                if (!server) {
-                    alert("Please select a server");
-                    return;
-                }
-
-                const data = { username, password };
-                sessionStorage.setItem("server", server);
+                const data = { username, password, firstname, lastname };
 
                 fetch(
-                    "http://localhost:8000/api/v1/user/login", {
+                    "http://localhost:8000/api/v1/user/register", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(data)
@@ -44,14 +38,11 @@
                             return;
                         }
 
-                        // Save user to session storage
-                        sessionStorage.setItem("user", JSON.stringify(data.data));
-
-                        // redirect to chat page
-                        window.location.href = window.location.origin + "/chat";
+                        // redirect to signin
+                        window.location.href = window.location.origin + "/";
                     })
                     .catch(err => {
-                        alert("Invalid username or password");
+                        alert("Invalid inputs. It's likely that the username is already taken.");
                         console.log(err);
                     });
             }
@@ -85,18 +76,27 @@
                         />
                     </div>
                     <div class="form-control">
-                        <label for="Room">Chat room</label>
-                        <select name="room" id="room" required>
-                            <option value="">Select a room</option>
-                            <option value="News">News</option>
-                            <option value="Covid 19">Covid19</option>
-                            <option value="NodeJs">NodeJs</option>
-                        </select>
+                        <label for="firstname">First name</label>
+                        <input
+                            type="text"
+                            name="firstname"
+                            id="firstname"
+                            placeholder="first name..."
+                            required
+                        />
                     </div>
-                    <button type="submit" class="btn" onclick="login(event)">Join Chat</button>
+                    <div class="form-control">
+                        <label for="lastname">Last name</label>
+                        <input
+                            type="text"
+                            name="lastname"
+                            id="lastname"
+                            placeholder="last name..."
+                            required
+                        />
+                    </div>
+                    <button type="submit" class="btn" onclick="register(event)">Register</button>
                 </form>
-                <br>
-                <i>Need an account? <a href="/register" class="inline-url">register here</a></i>
             </main>
         </div>
     </body>
