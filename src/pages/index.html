@@ -29,7 +29,7 @@
                 sessionStorage.setItem("server", server);
 
                 fetch(
-                    "http://localhost:8000/api/v1/user/login", {
+                    "/api/v1/user/login", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(data)

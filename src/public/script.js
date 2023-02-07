@@ -106,7 +106,7 @@ function outputUsers(users) {
 }
 
 //Prompt the user before leave chat room
-document.getElementById('leave-btn').addEventListener('click', () => {
+document.getElementById('leave-btn').addEventListener('click', function() {
     const leaveRoom = confirm('Are you sure you want to leave the chatroom?');
     if (leaveRoom) {
         socket.emit("user_leave", USER, ROOM);
